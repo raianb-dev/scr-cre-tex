@@ -31,6 +31,14 @@ def send_welcome(message):
 @bot.callback_query_handler(func=lambda call: call.data in ["resposta_sim", "resposta_claro"])
 def handle_query(call):
     try:
+        # Desativa os botões após o primeiro clique
+        markup = InlineKeyboardMarkup()
+        markup.row_width = 1
+        markup.add(InlineKeyboardButton("Clicked, thanks for your interest!", callback_data="no_action"))
+
+        # Atualiza a mensagem com o novo botão inativo
+        bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=markup)
+        
         # Loop para enviar cada imagem na pasta de forma gradual
         for filename in os.listdir(image_folder):
             file_path = os.path.join(image_folder, filename)
